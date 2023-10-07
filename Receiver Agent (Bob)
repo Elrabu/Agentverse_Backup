@@ -1,0 +1,28 @@
+
+# Agent Bob will respond to messages of the 'Request' type
+# 
+# Alice's address is..: agent1qfc9ese6h52wavejkleunesvflmd62tmzcl73e5qncxcu4zmwcq9s6d365u
+# Bob's address is....: agent1qg32vky9vz9u79auu2vg8y9sxtmewhy8x06pwympkpn8lkxf0refxvcay4v
+#
+#
+# In this example we will use:
+# - 'agent': this is your instance of the 'Agent' class that we will give an 'on_interval' and an 'on_message' task
+# - 'ctx': this is the agent's 'Context', which gives you access to all the agent's important functions
+# - 'Model': this is the base class for messages that we will use to define a 'Request' message
+
+# We define a message type called Request that consists of the single string field 'message'. 
+class Request(Model):
+    message: str
+
+# This decorator tells the agent how to handle messages that match the 'Request' type. It will execute everytime a message is received.
+@agent.on_message(model=Request)
+async def handle_message(ctx: Context, sender: str, msg: Request):
+    ctx.logger.info(f"Received message from {sender}:")
+    ctx.logger.info(f"{msg.message}")
+    # ctx.send is a function that sends a message to the specified agent address
+    if sender == 'agent1qfc9ese6h52wavejkleunesvflmd62tmzcl73e5qncxcu4zmwcq9s6d365u':
+       # await ctx.send(sender, Request(message="hello there alice"))
+        await ctx.send(sender, Request(message=f"The Message you sent: {msg.message}"))
+    else:
+        await ctx.send(sender, Request(message="hello there friend"))
+
