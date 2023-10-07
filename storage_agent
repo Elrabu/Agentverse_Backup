@@ -1,0 +1,31 @@
+
+# This agent will store a number in storage and increment it every 3 seconds.
+#
+# In this example we will use:
+# - 'agent': this is your instance of the 'Agent' class that we will give an 'on_interval' and an 'on_message' task
+# - 'ctx': this is the agent's 'Context', which gives you access to all the agent's important functions
+#
+# This decorator tells your agent to run the function below it on a time interval with the specified 'period' in seconds.
+@agent.on_interval(period=1.0)
+async def on_interval(ctx: Context):
+    # ctx.storage is a storage object inside the agent's 'Context' that allows agents to store key-value pairs
+    # You can use ctx.storage to either 'get' the current value or 'set' a new one.
+    
+    current_count = ctx.storage.get("count") or 0
+
+    ctx.logger.info(f"My count is: {current_count}")
+
+    if current_count >= 100:
+        ctx.storage.set("count", 0)
+        ctx.logger.info("Set count to 0")
+        ctx.logger.info("*************************************************************")
+    else:
+        #random number:
+        rand = random.randint(1,10)
+        ctx.storage.set("count", current_count + rand)
+        ctx.logger.info(f"Increased count by {rand}")
+
+    
+
+
+    
